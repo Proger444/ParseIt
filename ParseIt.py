@@ -74,7 +74,6 @@ def sort():
 
 def deps_2_create():
     temp_list = []
-    temp_list_2 = temp_list.copy()
     counter = 0
     entered = []
     for layers in layered:
@@ -95,18 +94,16 @@ def deps_2_create():
                         full_list.append(application_name)
                         temp_list.append(application_name)
     trigger = True
-    print(temp_list_2)
     while trigger:
         temp_list_2 = temp_list.copy()
+        del temp_list[:]
         for dependency in temp_list_2:
-            del temp_list[:]
             for application_name, list_of_app_dependencies in deps.items():
                 if action == "start":
                     if dependency == application_name:
                         for dep in list_of_app_dependencies:
                             full_list.append(dep)
                             temp_list.append(dep)
-                            print(dep)
                 if action == "stop":
                     if dependency in list_of_app_dependencies:
                         full_list.append(application_name)
@@ -131,7 +128,6 @@ if __name__ == '__main__':
     no_deps_apps()
     layered.append(no_deps)
     sort()
-    print(layered)
     deps_2_create()
     done = []
     if action == "start":
