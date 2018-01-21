@@ -8,7 +8,7 @@ deps_2 = {}
 hosts = {}
 layered = []
 app_list = []
-bottom_layer = []
+no_deps = []
 full_list = []
 
 parser = argparse.ArgumentParser("WHAT???")
@@ -36,24 +36,14 @@ def parse_yaml():
                     hosts[temp] = apps.get("hosts")
 
 
-def bottom_layer_apps():
-    if action == "stop":
-        for app in to_start:
-            bottom_layer.append(app)
-    if action == "start"
-        for app in app_list:
-            if app not in deps.keys():
-                bottom_layer.append(app)
+def no_deps_apps():
+    for app in app_list:
+        if app not in deps.keys():
+            no_deps.append(app)
 
-def stop_app:
-    to_append = []
-    deps_for_sort = deps.copy()
-    switch = True
-    while switch:
-        deps_for_sort_2 = deps_for_sort.copy()
-        for application_name, list_of_app_dependecies in deps_for_sort_2.items():
+
 def sort():
-    apps_with_dependencies = len(app_list) - len(bottom_layer)
+    apps_with_dependencies = len(app_list) - len(no_deps)
     switch = True
     iterations = 0
     to_append = []
@@ -96,20 +86,32 @@ def deps_2_create():
         full_list.append(app_to_start)
         for application_name, list_of_app_dependencies in deps.items():
             for dep in list_of_app_dependencies:
-                if application_name == app_to_start:
-                    full_list.append(dep)
-                    temp_list.append(dep)
-    print(temp_list)
+                if action == "start":
+                    if application_name == app_to_start:
+                        full_list.append(dep)
+                        temp_list.append(dep)
+                if action == "stop":
+                    if dep == app_to_start:
+                        full_list.append(application_name)
+                        temp_list.append(application_name)
     trigger = True
+    print(temp_list_2)
     while trigger:
         temp_list_2 = temp_list.copy()
         for dependency in temp_list_2:
             del temp_list[:]
             for application_name, list_of_app_dependencies in deps.items():
-                if dependency == application_name:
-                    for dep in list_of_app_dependencies:
-                        full_list.append(dep)
-                        temp_list.append(dep)
+                if action == "start":
+                    if dependency == application_name:
+                        for dep in list_of_app_dependencies:
+                            full_list.append(dep)
+                            temp_list.append(dep)
+                            print(dep)
+                if action == "stop":
+                    if dependency in list_of_app_dependencies:
+                        full_list.append(application_name)
+                        temp_list.append(application_name)
+
         counter = counter + 1
         if counter == len(layered):
             trigger == False
@@ -126,9 +128,10 @@ def work_with_app(action, app_to_work_with):
 if __name__ == '__main__':
 
     parse_yaml()
-    bottom_layer_apps()
-    layered.append(bottom_layer)
+    no_deps_apps()
+    layered.append(no_deps)
     sort()
+    print(layered)
     deps_2_create()
     done = []
     if action == "start":
